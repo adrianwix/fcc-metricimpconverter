@@ -10,6 +10,7 @@
 
 var expect = require("chai").expect;
 var ConvertHandler = require("../controllers/convertHandler.js");
+var fetch = require("node-fetch");
 
 module.exports = function(app) {
   var convertHandler = new ConvertHandler();
@@ -17,12 +18,14 @@ module.exports = function(app) {
   app.route("/api/convert").get(function(req, res) {
     var input = req.query.input;
     var initNum = convertHandler.getNum(input);
-    if (initNum === "invalid number") {
-      return res.send(initNum);
-    }
     var initUnit = convertHandler.getUnit(input);
-    if (initUnit === "invalid unit") {
-      return res.send(initUnit);
+    // Handling invalid query
+    if (initUnit === "invalid unit" && initNum === "invalid number") {
+      return res.status(400).send("invalid number and unit");
+    } else if (initNum === "invalid number") {
+      return res.status(400).send(initNum);
+    } else if (initUnit === "invalid unit") {
+      return res.status(400).send(initUnit);
     }
     var returnNum = convertHandler.convert(initNum, initUnit);
     var returnUnit = convertHandler.getReturnUnit(initUnit);

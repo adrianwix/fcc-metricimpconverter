@@ -11,33 +11,31 @@ function ConvertHandler() {
   this.getNum = function(input) {
     let result;
     // Find index of unit
-    let index = /[a-z]/.exec(input).index;
+    let index = /[A-Za-z]/.exec(input).index;
     // If index === 0 there are no number. Default 1
     if (index === 0) {
       return 1;
     }
     // Let split the input copy it from 0 to Index
-    let num = input
-      .split("")
-      .slice(0, index)
-      .join("");
+    let num = input.slice(0, index);
 
     if (input.indexOf("/") == -1) {
       result = Number(num);
     } else {
       inputArr = num.split("/");
-      if (inputArr > 2) {
-        return "invalid number";
+      if (inputArr.length > 2) {
+        result = "invalid number";
+      } else {
+        result = Number(inputArr[0]) / Number(inputArr[1]);
       }
-      result = Number(inputArr[0]) / Number(inputArr[1]);
     }
     return result;
   };
 
   this.getUnit = function(input) {
-    let result = /[a-z]*$/.exec(input)[0];
+    let result = /[A-Za-z]*$/.exec(input)[0].toLowerCase();
     let units = ["l", "gal", "kg", "lbs", "mi", "km"];
-    if (units.indexOf(result.toLowerCase()) === -1) {
+    if (units.indexOf(result) === -1) {
       return "invalid unit";
     } else {
       return result;
